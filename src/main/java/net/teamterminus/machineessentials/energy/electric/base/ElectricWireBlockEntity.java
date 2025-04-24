@@ -1,7 +1,6 @@
 package net.teamterminus.machineessentials.energy.electric.base;
 
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.block.entity.BlockEntity;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Vec3i;

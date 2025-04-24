@@ -11,6 +11,7 @@ import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.event.world.BlockSetEvent;
 import net.modificationstation.stationapi.api.event.world.WorldEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.util.math.Vec3i;
 import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -30,6 +32,9 @@ import static net.teamterminus.machineessentials.network.Network.OFFSETS;
  */
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class NetworkManager {
+	static {
+		EntrypointManager.registerLookup(MethodHandles.lookup());
+	}
 
 	private static final Map<Integer, Set<Network>> NETS = new HashMap<>();
 	private static final AtomicInteger ID_PROVIDER = new AtomicInteger(0);
@@ -47,7 +52,7 @@ public class NetworkManager {
 	}
 
 	@EventListener
-	public void blockChanged(BlockSetEvent event) {
+	private void blockChanged(BlockSetEvent event) {
 		if(event.blockState == States.AIR.get()){
 			removeBlock(new BlockChangeInfo(event.world, new Vec3i(event.x, event.y, event.z), event.blockState, event.blockMeta));
 		} else {
