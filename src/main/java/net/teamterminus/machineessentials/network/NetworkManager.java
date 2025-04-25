@@ -16,10 +16,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.util.math.Vec3i;
 import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -78,11 +75,18 @@ public class NetworkManager {
 	private static void saveNetsEvent(WorldEvent.Save event) {
 		try {
 			File file = event.world.dimensionData.getWorldPropertiesFile("networks");
-			NbtCompound tag = NbtIo.readCompressed(new FileInputStream(file));
-			NetworkManager.netsToTag(event.world,tag);
+			NbtCompound tag;
+			if (file.exists()) {
+				tag = NbtIo.readCompressed(new FileInputStream(file));
+				NetworkManager.netsToTag(event.world, tag);
+			}
+			else {
+				tag = new NbtCompound();
+				file.createNewFile();
+			}
 			NbtIo.writeCompressed(tag, new FileOutputStream(file));
 		}
-		catch (FileNotFoundException e) {
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
