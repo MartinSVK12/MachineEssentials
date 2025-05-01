@@ -12,9 +12,8 @@ import net.teamterminus.machineessentials.network.Network;
 import net.teamterminus.machineessentials.network.NetworkComponent;
 import net.teamterminus.machineessentials.network.NetworkType;
 import net.teamterminus.machineessentials.util.AveragingCounter;
-import net.teamterminus.machineessentials.util.BlockEntityInit;
 
-public abstract class ElectricBlockEntity extends BlockEntity implements BlockEntityInit, NetworkComponent, HasVoltageTier, Electric {
+public abstract class ElectricBlockEntity extends BlockEntity implements NetworkComponent, HasVoltageTier, Electric {
 
     /**
      * Prefer using getEnergy() instead when possible, this field might not always represent the real energy level!
