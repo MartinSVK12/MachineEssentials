@@ -1,0 +1,20 @@
+package net.teamterminus.metest.energy.electric.event;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.mine_diver.unsafeevents.listener.EventListener;
+import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryEvent;
+import net.modificationstation.stationapi.api.util.Namespace;
+
+public class ElectricScreens {
+
+    @SuppressWarnings("UnstableApiUsage")
+    public static final Namespace NAMESPACE = Namespace.resolve();
+
+    @Environment(EnvType.CLIENT)
+    @EventListener
+    public void registerScreenHandlers(GuiHandlerRegistryEvent event) {
+
+    }
+
+}
