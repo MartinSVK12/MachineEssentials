@@ -8,30 +8,29 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.event.mod.InitEvent;
-import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.util.Namespace;
-import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 import net.teamterminus.machineessentials.fluid.core.Fluid;
 import net.teamterminus.machineessentials.fluid.core.FluidStack;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 
 public class MachineEssentials {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
 
-    @Entrypoint.Namespace
-    public static final Namespace NAMESPACE = Null.get();
+    @SuppressWarnings("UnstableApiUsage")
+    public static final Namespace NAMESPACE = Namespace.resolve();
 
-    @Entrypoint.Logger
-    public static final Logger LOGGER = Null.get();
-
-    @Entrypoint.Instance
-    public static final MachineEssentials INSTANCE = Null.get();
+    public static final Logger LOGGER = NAMESPACE.getLogger("MachineEssentials");
 
     @EventListener
-    public static void init(InitEvent event) {
+    private static void init(InitEvent event) {
         Fluid.init();
         LOGGER.info("Machine Essentials initialized.");
     }
@@ -121,7 +120,7 @@ public class MachineEssentials {
     public static ArrayList<ItemStack> condenseList(List<ItemStack> list){
         ArrayList<ItemStack> stacks = new ArrayList<>();
         for (ItemStack stack : list) {
-            if(stack != null){
+            if (stack != null){
                 Optional<ItemStack> existing = stacks.stream().filter((S) -> S.isItemEqual(stack)).findAny();
                 if (existing.isPresent()) {
                     existing.get().count += stack.count;
