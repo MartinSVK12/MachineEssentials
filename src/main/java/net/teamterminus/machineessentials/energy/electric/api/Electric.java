@@ -1,9 +1,12 @@
 package net.teamterminus.machineessentials.energy.electric.api;
 
-import net.modificationstation.stationapi.api.util.math.Direction;
-import org.jetbrains.annotations.NotNull;
+
+
 
 //TODO: Possibly use capabilities from Zekromaster's Terminal mod to implement this later...
+
+import net.modificationstation.stationapi.api.util.math.Direction;
+import org.jetbrains.annotations.NotNull;
 
 public interface Electric {
     /**

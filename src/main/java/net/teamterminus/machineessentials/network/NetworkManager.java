@@ -1,5 +1,6 @@
 package net.teamterminus.machineessentials.network;
 
+
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NbtCompound;
@@ -96,12 +97,13 @@ public class NetworkManager {
         int y = blockChanged.pos.getY();
         int z = blockChanged.pos.getZ();
         World world = blockChanged.world;
+        BlockState state = blockChanged.state;
 
-        if (!canBeNet(blockChanged.state.getBlock())) {
+        if (!canBeNet(state.getBlock())) {
             return;
         }
 
-        NetworkComponentBlock component = (NetworkComponentBlock) blockChanged.state.getBlock();
+        NetworkComponentBlock component = (NetworkComponentBlock) state.getBlock();
 
         Set<Network> nets = NETS.computeIfAbsent(world.dimension.id, i -> new HashSet<>());
 
@@ -123,13 +125,14 @@ public class NetworkManager {
         //no nets around, create one
         if (size == 0) {
             net = new Network(world,component.getType());
-            net.addBlock(x, y, z);
+            net.addBlock(x, y, z, state);
             for (Vec3i offset: OFFSETS) {
                 int px = x + offset.getX();
                 int py = y + offset.getY();
                 int pz = z + offset.getZ();
+                BlockState pstate = world.getBlockState(px, py, pz);
                 if (canBeNet(world, px, py, pz)) {
-                    net.addBlock(px, py, pz);
+                    net.addBlock(px, py, pz, pstate);
                 }
             }
             if (net.getSize() > 1) {
@@ -139,7 +142,7 @@ public class NetworkManager {
         else if (size == 1) {
             Network potentialNet = sideNets.stream().findAny().get();
             if (potentialNet.isOfSameType(component)){
-                potentialNet.addBlock(x, y, z);
+                potentialNet.addBlock(x, y, z, state);
                 net = potentialNet;
             }
         }
@@ -149,7 +152,7 @@ public class NetworkManager {
             for (Network network : netsArray) {
                 if (network.isOfSameType(component)){
                     main = network;
-                    main.addBlock(x, y, z);
+                    main.addBlock(x, y, z, state);
                     for (Network otherNet : netsArray) {
                         if (otherNet == main){
                             continue;
@@ -167,13 +170,14 @@ public class NetworkManager {
 
         if (net == null && getNet(world, x, y, z) == null) {
             net = new Network(world,component.getType());
-            net.addBlock(x, y, z);
+            net.addBlock(x, y, z, state);
             for (Vec3i offset: OFFSETS) {
                 int px = x + offset.getX();
                 int py = y + offset.getY();
                 int pz = z + offset.getZ();
+                BlockState pstate = world.getBlockState(px, py, pz);
                 if (canBeNet(world, px, py, pz)) {
-                    net.addBlock(px, py, pz);
+                    net.addBlock(px, py, pz, pstate);
                 }
             }
             if (net.getSize() > 1) {
@@ -186,10 +190,11 @@ public class NetworkManager {
             int px = x + offset.getX();
             int py = y + offset.getY();
             int pz = z + offset.getZ();
+            BlockState pstate = world.getBlockState(px, py, pz);
             if (canBeNet(world, px, py, pz) && getNet(world, px, py, pz) == null && net != null) {
                 NetworkComponentBlock sideComponent = (NetworkComponentBlock) world.getBlockState(px, py, pz).getBlock();
                 if (net.isOfSameType(sideComponent)){
-                    net.addBlock(px, py, pz);
+                    net.addBlock(px, py, pz, pstate);
                 }
             }
         }
@@ -290,7 +295,7 @@ public class NetworkManager {
         return block instanceof NetworkComponentBlock;
     }
 
-    private static Network getNet(World world, int x, int y, int z) {
+    public static Network getNet(World world, int x, int y, int z) {
         Set<Network> nets = NETS.get(world.dimension.id);
         if (nets != null) {
             for (Network net: nets) {

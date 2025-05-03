@@ -4,14 +4,18 @@ import com.mojang.datafixers.util.Pair;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.event.mod.InitEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.math.Direction;
+import net.modificationstation.stationapi.api.util.math.Vec3i;
 import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
@@ -109,7 +113,47 @@ public class MachineEssentials {
         return world.getBlockEntity(origin.x + dir.getOffsetX(), origin.y + dir.getOffsetY(), origin.z + dir.getOffsetZ());
     }
 
+    public static BlockEntity getBlockEntity(Direction dir, BlockView world, Vec3i origin){
+        return world.getBlockEntity(origin.getX() + dir.getOffsetX(), origin.getY() + dir.getOffsetY(), origin.getZ() + dir.getOffsetZ());
+    }
+
+    public static BlockEntity getBlockEntity(BlockView world, Vec3i position){
+        return world.getBlockEntity(position.getX(), position.getY(), position.getZ());
+    }
+
     public static Block getBlock(Direction dir, StationFlatteningWorld world, BlockPos origin){
         return world.getBlockState(origin.x + dir.getOffsetX(), origin.y + dir.getOffsetY(), origin.z + dir.getOffsetZ()).getBlock();
+    }
+
+    public static ArrayList<ItemStack> condenseItemList(List<ItemStack> list) {
+        ArrayList<ItemStack> stacks = new ArrayList<>();
+        for (ItemStack stack : list) {
+            if (stack != null) {
+                boolean found = false;
+                for (ItemStack S : stacks) {
+                    if (S.isItemEqual(stack) && (S.getStationNbt().equals(stack.getStationNbt()))) {
+                        S.count += stack.count;
+                        found = true;
+                    }
+                }
+                if(!found) stacks.add(stack.copy());
+            }
+        }
+        return stacks;
+    }
+
+    public static @UnmodifiableView List<ItemStack> collectStacks(Inventory inv){
+        if(inv == null) return Collections.emptyList();
+        ArrayList<ItemStack> stacks = new ArrayList<>();
+
+        for (int i = 0; i < inv.size(); i++) {
+            stacks.add(i,inv.getStack(i));
+        }
+
+        return Collections.unmodifiableList(stacks);
+    }
+
+    public static @UnmodifiableView List<ItemStack> collectAndCondenseStacks(Inventory inv){
+        return condenseItemList(collectStacks(inv));
     }
 }

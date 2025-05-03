@@ -1,6 +1,7 @@
 package net.teamterminus.machineessentials.energy.electric.template;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.block.entity.BlockEntity;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Vec3i;
@@ -21,6 +22,12 @@ public abstract class ElectricWireBlockEntity extends BlockEntity implements Ele
     protected long ampRating = 0;
 
     protected AveragingCounter averageAmpLoad = new AveragingCounter();
+
+    public void setProperties(WireProperties properties) {
+        this.properties = properties;
+        voltageRating = properties.material().maxVoltage().maxVoltage;
+        ampRating = (long) properties.size() * properties.material().defaultAmps();
+    }
 
     @Override
     public NetworkType getType() {

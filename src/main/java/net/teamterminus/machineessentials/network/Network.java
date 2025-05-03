@@ -6,6 +6,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Vec3i;
 import net.teamterminus.machineessentials.MachineEssentials;
 import org.jetbrains.annotations.NotNull;
@@ -72,8 +74,8 @@ public class Network {
         return blocks.containsKey(pos);
     }
 
-    public void addBlock(int x, int y, int z) {
-        Block block = world.getBlockState(x, y, z).getBlock();
+    public void addBlock(int x, int y, int z, BlockState state) {
+        Block block = state.getBlock();
         byte meta = (byte) world.getBlockMeta(x, y, z);
 
         Vec3i pos = new Vec3i(x, y, z);
@@ -83,8 +85,8 @@ public class Network {
             if (world.getBlockEntity(x, y, z) instanceof NetworkComponent){
                 ((NetworkComponent) world.getBlockEntity(x, y, z)).networkChanged(this);
             }
-            update();
         }
+        update();
         NET_PATH_DATA.clear();
     }
 
@@ -153,6 +155,7 @@ public class Network {
                 sideNet.update();
             }
         }
+        update();
         NET_PATH_DATA.clear();
         return result;
     }
@@ -205,7 +208,7 @@ public class Network {
                 int x = tag.getInt("x");
                 int y = tag.getInt("y");
                 int z = tag.getInt("z");
-                byte meta = tag.getByte("meta");
+                int meta = tag.getInt("meta");
                 net.blocks.put(new Vec3i(x, y, z), new BlockEntry(block, meta));
                 if (NetworkManager.canBeNet(block)){
                     net.networkBlocks.put(new Vec3i(x, y, z), (NetworkComponentBlock) block);
@@ -285,17 +288,55 @@ public class Network {
     }
 
     public String toString() {
-        return String.format("[ID: %d, Size: %d]", id, networkBlocks.size());
+        return String.format("[ID: %d, Size: %d, Active Size: %d]", id, getSize(), networkBlocks.size());
     }
 
     protected static class BlockEntry {
         Block block;
-        byte meta;
+        int meta;
 
-        private BlockEntry(Block block, byte meta) {
+        private BlockEntry(Block block, int meta) {
             this.block = block;
             this.meta = meta;
         }
+    }
+
+    public <T> Set<T> search(Vec3i start, Class<T> clazz){
+        HashSet<T> result = new HashSet<>();
+        List<NetworkPath> paths = getPathData(start);
+        for (NetworkPath path : paths) {
+            if (clazz.isAssignableFrom(path.target.getClass())) {
+                if (MachineEssentials.getBlockEntity(world,path.target.getPosition()) != path.target) {
+                    NET_PATH_DATA.clear();
+                } else {
+                    result.add(clazz.cast(path.target));
+                }
+            }
+        }
+        return result;
+    }
+
+    public <T> T findFirst(Vec3i start, Class<T> clazz, NetworkType networkType) {
+        for (Direction dir : Direction.values()) {
+
+            BlockEntity tileEntity = MachineEssentials.getBlockEntity(dir,world,start);
+            if(tileEntity instanceof NetworkComponent) {
+                if (((NetworkComponent) tileEntity).getType() == networkType) {
+                    List<NetworkPath> paths = getPathData(((NetworkComponent) tileEntity).getPosition());
+                    for (NetworkPath path : paths) {
+                        if (clazz.isAssignableFrom(path.target.getClass())) {
+                            if (MachineEssentials.getBlockEntity(world,path.target.getPosition()) != path.target) continue;
+                            return clazz.cast(path.target);
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public Set<Vec3i> getPositions() {
+        return Collections.unmodifiableSet(blocks.keySet());
     }
 
 }
