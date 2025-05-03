@@ -9,8 +9,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.event.mod.InitEvent;
+import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.util.Namespace;
+import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Vec3i;
 import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
@@ -25,8 +27,7 @@ public class METest {
         EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
-    @SuppressWarnings("UnstableApiUsage")
-    public static final Namespace NAMESPACE = Namespace.resolve();
+    public static Namespace NAMESPACE = Namespace.of("metest");
 
     public static final Logger LOGGER = NAMESPACE.getLogger("MachineEssentials|Test");
 

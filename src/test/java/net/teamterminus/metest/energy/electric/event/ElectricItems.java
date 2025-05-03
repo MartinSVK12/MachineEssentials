@@ -6,9 +6,6 @@ import net.modificationstation.stationapi.api.util.Namespace;
 
 public class ElectricItems {
 
-    @SuppressWarnings("UnstableApiUsage")
-    public static final Namespace NAMESPACE = Namespace.resolve();
-
     @EventListener
     public void registerItems(ItemRegistryEvent event) {
 

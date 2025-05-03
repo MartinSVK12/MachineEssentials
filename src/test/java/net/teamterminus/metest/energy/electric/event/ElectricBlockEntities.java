@@ -4,12 +4,12 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.event.block.entity.BlockEntityRegisterEvent;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
+import net.teamterminus.metest.METest;
 import net.teamterminus.metest.energy.electric.block.entity.BlockEntityWire;
 
-public class ElectricBlockEntities {
+import static net.teamterminus.metest.METest.NAMESPACE;
 
-    @SuppressWarnings("UnstableApiUsage")
-    public static final Namespace NAMESPACE = Namespace.resolve();
+public class ElectricBlockEntities {
 
     @EventListener
     public static void registerBlockEntities(BlockEntityRegisterEvent event) {

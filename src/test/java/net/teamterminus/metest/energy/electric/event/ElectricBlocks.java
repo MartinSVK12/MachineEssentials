@@ -13,10 +13,9 @@ import net.teamterminus.metest.energy.electric.util.TestWireMaterials;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class ElectricBlocks {
+import static net.teamterminus.metest.METest.NAMESPACE;
 
-    @SuppressWarnings("UnstableApiUsage")
-    public static final Namespace NAMESPACE = Namespace.resolve();
+public class ElectricBlocks {
 
     public static BlockWire wire;
 

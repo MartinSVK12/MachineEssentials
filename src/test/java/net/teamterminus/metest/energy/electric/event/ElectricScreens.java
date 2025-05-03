@@ -8,9 +8,6 @@ import net.modificationstation.stationapi.api.util.Namespace;
 
 public class ElectricScreens {
 
-    @SuppressWarnings("UnstableApiUsage")
-    public static final Namespace NAMESPACE = Namespace.resolve();
-
     @Environment(EnvType.CLIENT)
     @EventListener
     public void registerScreenHandlers(GuiHandlerRegistryEvent event) {
