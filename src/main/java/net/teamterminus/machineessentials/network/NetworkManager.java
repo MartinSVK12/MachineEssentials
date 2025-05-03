@@ -11,15 +11,13 @@ import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.event.world.BlockSetEvent;
 import net.modificationstation.stationapi.api.event.world.WorldEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.util.math.Vec3i;
 import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
-import net.teamterminus.machineessentials.MachineEssentials;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.*;
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -31,6 +29,9 @@ import static net.teamterminus.machineessentials.network.Network.OFFSETS;
  */
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class NetworkManager {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
 
     private static final Map<Integer, Set<Network>> NETS = new HashMap<>();
     private static final AtomicInteger ID_PROVIDER = new AtomicInteger(0);
@@ -48,7 +49,7 @@ public class NetworkManager {
     }
 
     @EventListener
-    public static void blockChanged(BlockSetEvent event) {
+    private void blockChanged(BlockSetEvent event) {
         if (event.blockState == States.AIR.get()){
             removeBlock(new BlockChangeInfo(event.world, new Vec3i(event.x, event.y, event.z), event.blockState, event.blockMeta));
         } else {
@@ -58,34 +59,36 @@ public class NetworkManager {
 
     @EventListener
     private static void initNetsEvent(WorldEvent.Init event) {
-        File file = event.world.dimensionData.getWorldPropertiesFile("networks_" + event.world.dimension.id);
-        if (!file.exists()) return;
-        
-        try {
-            NbtCompound tag = NbtIo.readCompressed(new FileInputStream(file));
-            NetworkManager.netsFromTag(event.world, tag);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        File file = event.world.dimensionData.getWorldPropertiesFile("networks");
+        if (file.exists()) {
+            try {
+                NbtCompound tag = NbtIo.readCompressed(new FileInputStream(file));
+                NetworkManager.netsFromTag(event.world, tag);
+            }
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @EventListener
     private static void saveNetsEvent(WorldEvent.Save event) {
-        File file = event.world.dimensionData.getWorldPropertiesFile("networks_" + event.world.dimension.id);
-        NbtCompound tag = new NbtCompound();
-        
         try {
-            tag = NbtIo.readCompressed(new FileInputStream(file));
-        } catch (FileNotFoundException ignored) {
-            MachineEssentials.LOGGER.info("Creating new networks file for dimension {}!", event.world.dimension.id);
-        }
-        NetworkManager.netsToTag(event.world, tag);
-        try {
+            File file = event.world.dimensionData.getWorldPropertiesFile("networks");
+            NbtCompound tag;
+            if (file.exists()) {
+                tag = NbtIo.readCompressed(new FileInputStream(file));
+                NetworkManager.netsToTag(event.world, tag);
+            }
+            else {
+                tag = new NbtCompound();
+                file.createNewFile();
+            }
             NbtIo.writeCompressed(tag, new FileOutputStream(file));
-        } catch (FileNotFoundException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static void addBlock(BlockChangeInfo blockChanged) {
@@ -119,7 +122,7 @@ public class NetworkManager {
         int size = sideNets.size();
         //no nets around, create one
         if (size == 0) {
-            net = new Network(world, component.getType());
+            net = new Network(world,component.getType());
             net.addBlock(x, y, z);
             for (Vec3i offset: OFFSETS) {
                 int px = x + offset.getX();
@@ -163,7 +166,7 @@ public class NetworkManager {
         }
 
         if (net == null && getNet(world, x, y, z) == null) {
-            net = new Network(world, component.getType());
+            net = new Network(world,component.getType());
             net.addBlock(x, y, z);
             for (Vec3i offset: OFFSETS) {
                 int px = x + offset.getX();
@@ -279,7 +282,7 @@ public class NetworkManager {
     }
 
     public static boolean canBeNet(StationFlatteningWorld world, int x, int y, int z) {
-        Block block = world.getBlockState(x, y, z).getBlock();
+        Block block = world.getBlockState(x,y,z).getBlock();
         return canBeNet(block);
     }
 
