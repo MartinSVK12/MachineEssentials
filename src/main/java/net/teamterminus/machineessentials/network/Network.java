@@ -82,8 +82,8 @@ public class Network {
         blocks.put(pos, new BlockEntry(block, meta));
         if (block instanceof NetworkComponentBlock) {
             networkBlocks.put(pos, (NetworkComponentBlock) block);
-            if (world.getBlockEntity(x, y, z) instanceof NetworkComponent){
-                ((NetworkComponent) world.getBlockEntity(x, y, z)).networkChanged(this);
+            if (world.getBlockEntity(x, y, z) instanceof NetworkComponent component){
+                component.networkChanged(this);
             }
         }
         update();
@@ -187,7 +187,7 @@ public class Network {
             tag.putInt("y", pos.getY());
             tag.putInt("z", pos.getZ());
             tag.putInt("id", entry.block.id);
-            tag.putInt("meta", entry.meta);
+            tag.putByte("meta", entry.meta);
             positions.add(tag);
         });
 
@@ -208,7 +208,7 @@ public class Network {
                 int x = tag.getInt("x");
                 int y = tag.getInt("y");
                 int z = tag.getInt("z");
-                int meta = tag.getInt("meta");
+                byte meta = tag.getByte("meta");
                 net.blocks.put(new Vec3i(x, y, z), new BlockEntry(block, meta));
                 if (NetworkManager.canBeNet(block)){
                     net.networkBlocks.put(new Vec3i(x, y, z), (NetworkComponentBlock) block);
@@ -293,9 +293,9 @@ public class Network {
 
     protected static class BlockEntry {
         Block block;
-        int meta;
+        byte meta;
 
-        private BlockEntry(Block block, int meta) {
+        private BlockEntry(Block block, byte meta) {
             this.block = block;
             this.meta = meta;
         }

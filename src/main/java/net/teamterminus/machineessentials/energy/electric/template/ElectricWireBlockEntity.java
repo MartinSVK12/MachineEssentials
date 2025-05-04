@@ -2,6 +2,7 @@ package net.teamterminus.machineessentials.energy.electric.template;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Vec3i;
@@ -10,10 +11,12 @@ import net.teamterminus.machineessentials.energy.electric.api.Electric;
 import net.teamterminus.machineessentials.energy.electric.api.ElectricWire;
 import net.teamterminus.machineessentials.energy.electric.api.WireProperties;
 import net.teamterminus.machineessentials.network.Network;
+import net.teamterminus.machineessentials.network.NetworkManager;
 import net.teamterminus.machineessentials.network.NetworkType;
 import net.teamterminus.machineessentials.util.AveragingCounter;
+import net.teamterminus.machineessentials.util.BlockEntityInit;
 
-public abstract class ElectricWireBlockEntity extends BlockEntity implements ElectricWire {
+public abstract class ElectricWireBlockEntity extends BlockEntity implements ElectricWire, BlockEntityInit {
 
     public Network energyNet;
     @Getter
@@ -23,8 +26,10 @@ public abstract class ElectricWireBlockEntity extends BlockEntity implements Ele
 
     protected AveragingCounter averageAmpLoad = new AveragingCounter();
 
-    public void setProperties(WireProperties properties) {
-        this.properties = properties;
+    @Override
+    public void init(Block block) {
+        networkChanged(NetworkManager.getNet(world,x,y,z));
+        this.properties = ((ElectricWireBlock) block).getProperties();
         voltageRating = properties.material().maxVoltage().maxVoltage;
         ampRating = (long) properties.size() * properties.material().defaultAmps();
     }
@@ -59,7 +64,9 @@ public abstract class ElectricWireBlockEntity extends BlockEntity implements Ele
         return voltageRating;
     }
     @Override
-    public long getAmpRating() {return ampRating;}
+    public long getAmpRating() {
+        return ampRating;
+    }
 
     @Override
     public void incrementAmperage(long amps){

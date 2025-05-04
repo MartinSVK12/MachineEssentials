@@ -28,7 +28,6 @@ import static net.teamterminus.machineessentials.network.Network.OFFSETS;
  * Global singleton that manages saving/loading network data, removing/adding blocks from/to networks, merging similar networks together,
  * and splitting disconnected parts of a network.
  */
-@Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class NetworkManager {
     static {
         EntrypointManager.registerLookup(MethodHandles.lookup());
@@ -36,7 +35,6 @@ public class NetworkManager {
 
     private static final Map<Integer, Set<Network>> NETS = new HashMap<>();
     private static final AtomicInteger ID_PROVIDER = new AtomicInteger(0);
-    private static final NetworkManager INSTANCE = new NetworkManager();
 
     public NetworkManager() {}
 
@@ -45,12 +43,8 @@ public class NetworkManager {
         return net == null ? -1 : net.hashCode();
     }
 
-    public static NetworkManager getInstance() {
-        return INSTANCE;
-    }
-
     @EventListener
-    private void blockChanged(BlockSetEvent event) {
+    private static void blockChanged(BlockSetEvent event) {
         if (event.blockState == States.AIR.get()){
             removeBlock(new BlockChangeInfo(event.world, new Vec3i(event.x, event.y, event.z), event.blockState, event.blockMeta));
         } else {
