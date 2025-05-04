@@ -27,9 +27,11 @@ public class METest {
         EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
-    public static Namespace NAMESPACE = Namespace.of("metest");
+    @Entrypoint.Namespace
+    public static Namespace NAMESPACE;
 
-    public static final Logger LOGGER = NAMESPACE.getLogger("MachineEssentials|Test");
+    @Entrypoint.Logger
+    public static Logger LOGGER;
 
     @EventListener
     private static void init(InitEvent event) {

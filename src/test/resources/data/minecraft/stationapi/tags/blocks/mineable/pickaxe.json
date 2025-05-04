@@ -1,5 +1,7 @@
 {
   "values": [
-    "metest:wire"
+    "metest:wire",
+    "metest:generator",
+    "metest:machine"
   ]
 }
