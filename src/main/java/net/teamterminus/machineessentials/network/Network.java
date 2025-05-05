@@ -18,7 +18,7 @@ import java.util.*;
  * A network of blocks.
  */
 public class Network {
-    
+
     public static final Vec3i[] OFFSETS = new Vec3i[]{
             new Vec3i(0, 1, 0),
             new Vec3i(0, -1, 0),
@@ -49,14 +49,15 @@ public class Network {
 
     /**
      * Returns a list of paths possible in this network from the current position.
+     *
      * @param pos The position to start from
      * @return List of possible <code>NetworkPath</code>s sorted according to their distance from <code>pos</code>
      */
-    public List<NetworkPath> getPathData(Vec3i pos){
+    public List<NetworkPath> getPathData(Vec3i pos) {
         List<NetworkPath> routes = NET_PATH_DATA.get(pos);
-        if (routes == null){
+        if (routes == null) {
             routes = NetworkWalker.createNetworkPaths(world, pos);
-            if (routes == null){
+            if (routes == null) {
                 return Collections.emptyList();
             }
             routes.sort(Comparator.comparingInt(NetworkPath::getDistance));
@@ -82,7 +83,7 @@ public class Network {
         blocks.put(pos, new BlockEntry(block, meta));
         if (block instanceof NetworkComponentBlock) {
             networkBlocks.put(pos, (NetworkComponentBlock) block);
-            if (world.getBlockEntity(x, y, z) instanceof NetworkComponent component){
+            if (world.getBlockEntity(x, y, z) instanceof NetworkComponent component) {
                 component.networkChanged(this);
             }
         }
@@ -94,7 +95,7 @@ public class Network {
         Vec3i pos = new Vec3i(x, y, z);
         NetworkComponentBlock component = networkBlocks.get(pos);
         if (component != null) {
-            if (world.getBlockEntity(x, y, z) instanceof NetworkComponent){
+            if (world.getBlockEntity(x, y, z) instanceof NetworkComponent) {
                 ((NetworkComponent) world.getBlockEntity(x, y, z)).removedFromNetwork(this);
             }
         }
@@ -144,7 +145,7 @@ public class Network {
                 if (netBlock != null) {
                     sideNet.networkBlocks.put(blockPos, netBlock);
                     BlockEntity blockEntity = world.getBlockEntity(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-                    if (blockEntity instanceof NetworkComponent){
+                    if (blockEntity instanceof NetworkComponent) {
                         ((NetworkComponent) blockEntity).networkChanged(sideNet);
                     }
                 }
@@ -167,7 +168,7 @@ public class Network {
         }
         networkBlocks.forEach((pos, networkComponent) -> {
             BlockEntity blockEntity = world.getBlockEntity(pos.getX(), pos.getY(), pos.getZ());
-            if (blockEntity instanceof NetworkComponent){
+            if (blockEntity instanceof NetworkComponent) {
                 ((NetworkComponent) blockEntity).networkChanged(net);
             }
         });
@@ -210,7 +211,7 @@ public class Network {
                 int z = tag.getInt("z");
                 byte meta = tag.getByte("meta");
                 net.blocks.put(new Vec3i(x, y, z), new BlockEntry(block, meta));
-                if (NetworkManager.canBeNet(block)){
+                if (NetworkManager.canBeNet(block)) {
                     net.networkBlocks.put(new Vec3i(x, y, z), (NetworkComponentBlock) block);
                 }
             }
@@ -253,17 +254,17 @@ public class Network {
     public void update() {
         networkBlocks.forEach((pos, networkComponent) -> {
             BlockEntity blockEntity = world.getBlockEntity(pos.getX(), pos.getY(), pos.getZ());
-            if (blockEntity instanceof NetworkComponent){
+            if (blockEntity instanceof NetworkComponent) {
                 ((NetworkComponent) blockEntity).networkChanged(this);
             }
         });
     }
 
-    public boolean isOfSameType(NetworkComponentBlock component){
+    public boolean isOfSameType(NetworkComponentBlock component) {
         return component.getType().equals(type);
     }
 
-    public boolean isOfSameType(Network net){
+    public boolean isOfSameType(Network net) {
         return net.type.equals(type);
     }
 
@@ -301,12 +302,12 @@ public class Network {
         }
     }
 
-    public <T> Set<T> search(Vec3i start, Class<T> clazz){
+    public <T> Set<T> search(Vec3i start, Class<T> clazz) {
         HashSet<T> result = new HashSet<>();
         List<NetworkPath> paths = getPathData(start);
         for (NetworkPath path : paths) {
             if (clazz.isAssignableFrom(path.target.getClass())) {
-                if (MachineEssentials.getBlockEntity(world,path.target.getPosition()) != path.target) {
+                if (MachineEssentials.getBlockEntity(world, path.target.getPosition()) != path.target) {
                     NET_PATH_DATA.clear();
                 } else {
                     result.add(clazz.cast(path.target));
@@ -319,13 +320,14 @@ public class Network {
     public <T> T findFirst(Vec3i start, Class<T> clazz, NetworkType networkType) {
         for (Direction dir : Direction.values()) {
 
-            BlockEntity tileEntity = MachineEssentials.getBlockEntity(dir,world,start);
-            if(tileEntity instanceof NetworkComponent) {
+            BlockEntity tileEntity = MachineEssentials.getBlockEntity(dir, world, start);
+            if (tileEntity instanceof NetworkComponent) {
                 if (((NetworkComponent) tileEntity).getType() == networkType) {
                     List<NetworkPath> paths = getPathData(((NetworkComponent) tileEntity).getPosition());
                     for (NetworkPath path : paths) {
                         if (clazz.isAssignableFrom(path.target.getClass())) {
-                            if (MachineEssentials.getBlockEntity(world,path.target.getPosition()) != path.target) continue;
+                            if (MachineEssentials.getBlockEntity(world, path.target.getPosition()) != path.target)
+                                continue;
                             return clazz.cast(path.target);
                         }
                     }

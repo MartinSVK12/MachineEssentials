@@ -10,9 +10,6 @@ import net.modificationstation.stationapi.api.client.event.gui.screen.container.
 import net.modificationstation.stationapi.api.client.item.CustomTooltipProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,15 +28,13 @@ public class TooltipHelperMixin {
 
         if (itemStack.getItem() instanceof CustomTooltipProvider itemProvider) {
             provider = itemProvider;
-        }
-        else if (itemStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CustomTooltipProvider blockProvider) {
+        } else if (itemStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CustomTooltipProvider blockProvider) {
             provider = blockProvider;
         }
 
         if (provider != null) {
             newTooltip = new ArrayList<>(Arrays.asList(provider.getTooltip(itemStack, originalTooltip)));
-        }
-        else {
+        } else {
             ArrayList<String> list = new ArrayList<>();
             list.add(originalTooltip);
             newTooltip = list;

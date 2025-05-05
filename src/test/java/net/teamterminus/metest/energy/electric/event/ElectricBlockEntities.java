@@ -3,7 +3,6 @@ package net.teamterminus.metest.energy.electric.event;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.event.block.entity.BlockEntityRegisterEvent;
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.teamterminus.metest.energy.electric.block.TestGeneratorBlock;
 import net.teamterminus.metest.energy.electric.block.entity.TestGeneratorBlockEntity;
 import net.teamterminus.metest.energy.electric.block.entity.TestMachineBlockEntity;
 import net.teamterminus.metest.energy.electric.block.entity.TestWireBlockEntity;

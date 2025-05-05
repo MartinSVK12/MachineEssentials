@@ -20,6 +20,7 @@ public abstract class ElectricBlockEntity extends BlockEntity implements Network
 
     /**
      * Only use this directly if you know what you're doing.
+     *
      * @see #getEnergy()
      */
     protected long energy = 0;
@@ -46,7 +47,7 @@ public abstract class ElectricBlockEntity extends BlockEntity implements Network
 
     @Override
     public void init(Block block) {
-        networkChanged(NetworkManager.getNet(world,x,y,z));
+        networkChanged(NetworkManager.getNet(world, x, y, z));
     }
 
     //IEnergyContainer

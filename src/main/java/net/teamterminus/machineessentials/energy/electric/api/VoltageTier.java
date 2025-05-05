@@ -2,7 +2,6 @@ package net.teamterminus.machineessentials.energy.electric.api;
 
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.modificationstation.stationapi.api.util.Formatting;
 

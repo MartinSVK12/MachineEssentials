@@ -24,31 +24,20 @@ public class ElectricBlocks {
     public static TestMachineBlock machine;
 
     @EventListener
-    public static void registerBlocks(BlockRegistryEvent event){
-        wire = (TestWireBlock) new TestWireBlock(Identifier.of(NAMESPACE,"wire"), Material.METAL, new WireProperties(1,false, true, TestWireMaterials.test))
+    public static void registerBlocks(BlockRegistryEvent event) {
+        wire = (TestWireBlock) new TestWireBlock(Identifier.of(NAMESPACE, "wire"), Material.METAL, new WireProperties(1, false, true, TestWireMaterials.test))
                 .setTranslationKey(NAMESPACE, "wire")
                 .setHardness(1)
                 .setResistance(5);
 
         generator = (TestGeneratorBlock) new TestGeneratorBlock(Identifier.of(NAMESPACE, "generator"), Material.METAL, VoltageTier.LV)
-                .setTranslationKey(NAMESPACE,"generator")
+                .setTranslationKey(NAMESPACE, "generator")
                 .setHardness(1)
                 .setResistance(5);
 
         machine = (TestMachineBlock) new TestMachineBlock(Identifier.of(NAMESPACE, "machine"), Material.METAL, VoltageTier.LV)
-                .setTranslationKey(NAMESPACE,"machine")
+                .setTranslationKey(NAMESPACE, "machine")
                 .setHardness(1)
                 .setResistance(5);
     }
-
-    public static Block makeBlock(String id, Class<? extends Block> clazz){
-        try {
-            Constructor<? extends Block> c = clazz.getDeclaredConstructor(Identifier.class, Material.class);
-
-            return c.newInstance(Identifier.of(NAMESPACE, id), Material.STONE).setTranslationKey(NAMESPACE, id).setHardness(1).setResistance(5);
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 }

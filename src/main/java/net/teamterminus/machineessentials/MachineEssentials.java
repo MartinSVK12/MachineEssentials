@@ -35,8 +35,8 @@ public class MachineEssentials {
         LOGGER.info("Machine Essentials initialized.");
     }
 
-    public static <K, V> Map<K, V> mapOf(K[] keys, V[] values){
-        if (keys.length != values.length){
+    public static <K, V> Map<K, V> mapOf(K[] keys, V[] values) {
+        if (keys.length != values.length) {
             throw new IllegalArgumentException("Arrays differ in size!");
         }
         HashMap<K, V> map = new HashMap<>();
@@ -46,13 +46,14 @@ public class MachineEssentials {
         return map;
     }
 
-    public static <T, V> T[] arrayFill(T[] array, V value){
+    public static <T, V> T[] arrayFill(T[] array, V value) {
         Arrays.fill(array, value);
         return array;
     }
 
     /**
      * Maps a value from one range to another.
+     *
      * @return The resuling value after being mapped from one range to another
      */
     public static double map(double value,
@@ -69,16 +70,16 @@ public class MachineEssentials {
     }
 
     @SafeVarargs
-    public static <T> List<T> listOf(T... values){
+    public static <T> List<T> listOf(T... values) {
         return new ArrayList<>(Arrays.asList(values));
     }
 
     @SafeVarargs
-    public static <T> Set<T> setOf(T... values){
+    public static <T> Set<T> setOf(T... values) {
         return new HashSet<>(Arrays.asList(values));
     }
 
-    public static <T, U> List<Pair<T, U>> zip(List<T> first, List<U> second){
+    public static <T, U> List<Pair<T, U>> zip(List<T> first, List<U> second) {
         List<Pair<T, U>> list = new ArrayList<>();
         List<?> shortest = first.size() < second.size() ? first : second;
         for (int i = 0; i < shortest.size(); i++) {
@@ -91,37 +92,37 @@ public class MachineEssentials {
      * @param values The values to be checked
      * @return Returns the smallest of <code>values</code>
      */
-    public static long multiMin(long... values){
+    public static long multiMin(long... values) {
         long min = Long.MAX_VALUE;
         for (long value : values) {
-            if (value < min){
+            if (value < min) {
                 min = value;
             }
         }
         return min;
     }
 
-    public static BlockEntity getBlockEntity(Direction dir, BlockView world, BlockEntity origin){
+    public static BlockEntity getBlockEntity(Direction dir, BlockView world, BlockEntity origin) {
         return world.getBlockEntity(origin.x + dir.getOffsetX(), origin.y + dir.getOffsetY(), origin.z + dir.getOffsetZ());
     }
 
-    public static Block getBlock(Direction dir, StationFlatteningWorld world, BlockEntity origin){
+    public static Block getBlock(Direction dir, StationFlatteningWorld world, BlockEntity origin) {
         return world.getBlockState(origin.x + dir.getOffsetX(), origin.y + dir.getOffsetY(), origin.z + dir.getOffsetZ()).getBlock();
     }
 
-    public static BlockEntity getBlockEntity(Direction dir, BlockView world, BlockPos origin){
+    public static BlockEntity getBlockEntity(Direction dir, BlockView world, BlockPos origin) {
         return world.getBlockEntity(origin.x + dir.getOffsetX(), origin.y + dir.getOffsetY(), origin.z + dir.getOffsetZ());
     }
 
-    public static BlockEntity getBlockEntity(Direction dir, BlockView world, Vec3i origin){
+    public static BlockEntity getBlockEntity(Direction dir, BlockView world, Vec3i origin) {
         return world.getBlockEntity(origin.getX() + dir.getOffsetX(), origin.getY() + dir.getOffsetY(), origin.getZ() + dir.getOffsetZ());
     }
 
-    public static BlockEntity getBlockEntity(BlockView world, Vec3i position){
+    public static BlockEntity getBlockEntity(BlockView world, Vec3i position) {
         return world.getBlockEntity(position.getX(), position.getY(), position.getZ());
     }
 
-    public static Block getBlock(Direction dir, StationFlatteningWorld world, BlockPos origin){
+    public static Block getBlock(Direction dir, StationFlatteningWorld world, BlockPos origin) {
         return world.getBlockState(origin.x + dir.getOffsetX(), origin.y + dir.getOffsetY(), origin.z + dir.getOffsetZ()).getBlock();
     }
 
@@ -136,24 +137,24 @@ public class MachineEssentials {
                         found = true;
                     }
                 }
-                if(!found) stacks.add(stack.copy());
+                if (!found) stacks.add(stack.copy());
             }
         }
         return stacks;
     }
 
-    public static @UnmodifiableView List<ItemStack> collectStacks(Inventory inv){
-        if(inv == null) return Collections.emptyList();
+    public static @UnmodifiableView List<ItemStack> collectStacks(Inventory inv) {
+        if (inv == null) return Collections.emptyList();
         ArrayList<ItemStack> stacks = new ArrayList<>();
 
         for (int i = 0; i < inv.size(); i++) {
-            stacks.add(i,inv.getStack(i));
+            stacks.add(i, inv.getStack(i));
         }
 
         return Collections.unmodifiableList(stacks);
     }
 
-    public static @UnmodifiableView List<ItemStack> collectAndCondenseStacks(Inventory inv){
+    public static @UnmodifiableView List<ItemStack> collectAndCondenseStacks(Inventory inv) {
         return condenseItemList(collectStacks(inv));
     }
 }

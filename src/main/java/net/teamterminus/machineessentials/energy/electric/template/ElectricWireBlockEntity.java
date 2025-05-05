@@ -1,7 +1,6 @@
 package net.teamterminus.machineessentials.energy.electric.template;
 
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.modificationstation.stationapi.api.util.math.Direction;
@@ -28,7 +27,7 @@ public abstract class ElectricWireBlockEntity extends BlockEntity implements Ele
 
     @Override
     public void init(Block block) {
-        networkChanged(NetworkManager.getNet(world,x,y,z));
+        networkChanged(NetworkManager.getNet(world, x, y, z));
         this.properties = ((ElectricWireBlock) block).getProperties();
         voltageRating = properties.material().maxVoltage().maxVoltage;
         ampRating = (long) properties.size() * properties.material().defaultAmps();
@@ -63,13 +62,14 @@ public abstract class ElectricWireBlockEntity extends BlockEntity implements Ele
     public long getVoltageRating() {
         return voltageRating;
     }
+
     @Override
     public long getAmpRating() {
         return ampRating;
     }
 
     @Override
-    public void incrementAmperage(long amps){
+    public void incrementAmperage(long amps) {
         averageAmpLoad.increment(world, amps);
         int dif = (int) (averageAmpLoad.getLast(world) - getAmpRating());
         if (dif > 0) {
@@ -77,7 +77,7 @@ public abstract class ElectricWireBlockEntity extends BlockEntity implements Ele
         }
     }
 
-    public double getAverageAmpLoad(){
+    public double getAverageAmpLoad() {
         return averageAmpLoad.getAverage(world);
     }
 }

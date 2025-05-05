@@ -2,7 +2,6 @@ package net.teamterminus.machineessentials.energy.electric.template;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 import net.modificationstation.stationapi.api.state.StateManager;
@@ -10,7 +9,6 @@ import net.modificationstation.stationapi.api.state.property.Properties;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockWithEntity;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.teamterminus.machineessentials.network.NetworkComponentBlock;
-import net.teamterminus.machineessentials.util.BlockEntityInit;
 
 public abstract class ElectricBlock extends TemplateBlockWithEntity implements NetworkComponentBlock {
 

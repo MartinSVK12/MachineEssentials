@@ -8,7 +8,7 @@ public class TestWireMaterials {
     public static WireMaterial test;
 
     static {
-        test = new WireMaterial("material.metest.wire.test",0x555555, 1, VoltageTier.LV, 0, 9001);
+        test = new WireMaterial("material.metest.wire.test", 0x555555, 1, VoltageTier.LV, 0, 9001);
     }
 
 }

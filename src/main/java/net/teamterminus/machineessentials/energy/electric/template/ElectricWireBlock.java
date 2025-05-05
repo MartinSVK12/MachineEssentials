@@ -1,7 +1,6 @@
 package net.teamterminus.machineessentials.energy.electric.template;
 
 import lombok.Getter;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.teamterminus.machineessentials.energy.electric.api.WireProperties;

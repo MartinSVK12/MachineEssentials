@@ -1,6 +1,5 @@
 package net.teamterminus.metest.energy.electric.block;
 
-import lombok.Getter;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,11 +27,11 @@ public class TestWireBlock extends ElectricWireBlock implements CustomTooltipPro
 
     @Override
     public boolean onUse(World world, int x, int y, int z, PlayerEntity player) {
-        TestWireBlockEntity wire = (TestWireBlockEntity) world.getBlockEntity(x,y,z);
+        TestWireBlockEntity wire = (TestWireBlockEntity) world.getBlockEntity(x, y, z);
         player.sendMessage("---------------");
-        player.sendMessage(String.format("A: %f",wire.getAverageAmpLoad()));
-        player.sendMessage(String.format("WP: %s",wire.getProperties()));
-        player.sendMessage(String.format("N: %s",wire.energyNet));
+        player.sendMessage(String.format("A: %f", wire.getAverageAmpLoad()));
+        player.sendMessage(String.format("WP: %s", wire.getProperties()));
+        player.sendMessage(String.format("N: %s", wire.energyNet));
         player.sendMessage("---------------");
         return super.onUse(world, x, y, z, player);
     }
@@ -41,8 +40,8 @@ public class TestWireBlock extends ElectricWireBlock implements CustomTooltipPro
     public String[] getTooltip(ItemStack itemStack, String s) {
         WireMaterial mat = properties.material();
         VoltageTier voltage = mat.maxVoltage();
-        String superconductor = properties.superconductor() ? Formatting.LIGHT_PURPLE+ voltage.name()+" Superconductor\n" : "";
-        String str = s+"\n"+superconductor+String.format("%sMax Voltage: %s%dV %s(%s%s%s)\n%sMax Current: %s%dA\n%sVoltage Drop: %s%dV%s/block",
+        String superconductor = properties.superconductor() ? Formatting.LIGHT_PURPLE + voltage.name() + " Superconductor\n" : "";
+        String str = s + "\n" + superconductor + String.format("%sMax Voltage: %s%dV %s(%s%s%s)\n%sMax Current: %s%dA\n%sVoltage Drop: %s%dV%s/block",
                 Formatting.GRAY,
                 Formatting.GREEN, voltage.maxVoltage, Formatting.GRAY, voltage.textColor, voltage.name(), Formatting.GRAY,
                 Formatting.GRAY,

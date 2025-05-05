@@ -4,7 +4,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryEvent;
-import net.modificationstation.stationapi.api.util.Namespace;
 
 public class ElectricScreens {
 
